@@ -104,6 +104,37 @@ python -m wapor_downscale.inference.predict_ensemble \
   --weight 0.5
 ```
 
+## Fine-tune for your own area
+
+If you have WaPOR L3 ground truth for some dekads of your site and want to adapt the pre-trained model to it (rather than retrain from scratch), use:
+
+```bash
+jupyter lab notebooks/finetune_new_aoi.ipynb
+```
+
+The notebook walks through: load pre-trained 7-site weights → fine-tune at a reduced LR for 20-30 epochs → evaluate fine-tuned vs zero-shot on hold-out. See [`docs/finetuning.md`](docs/finetuning.md) for guidance on when fine-tuning helps vs hurts and how much data you need.
+
+CLI equivalent:
+
+```bash
+# Fine-tune SwinIR (note --pretrained, not --resume)
+python -m wapor_downscale.training.train_swinir \
+  --stacks-dir data/newsite/stacks/NEWSITE_STACK_S2_MATCH_L3_20M_L1_FULL_1 \
+  --out-dir    models/finetune_swinir_newsite \
+  --pretrained models/multi7_swinir_l1_e96_w16/swinir_best.pt \
+  --train-year-max 2023 --epochs 30 --lr 5e-5 \
+  --embed-dim 96 --depths 4,4,4,4 --window-size 16 --batch-size 2
+
+# Fine-tune Prithvi-V1
+python -m wapor_downscale.training.train_prithvi \
+  --stacks-dir data/newsite/stacks/NEWSITE_STACK_S2_MATCH_L3_20M_L1_FULL_1 \
+  --out-dir    models/finetune_prithvi_newsite \
+  --pretrained models/multi7_prithvi_v1_l1/prithvi_best.pt \
+  --train-year-max 2023 --epochs 30 \
+  --lr-head 5e-5 --lr-backbone 1e-6 \
+  --model-version v1 --freeze-until 22 --batch-size 2
+```
+
 ## Training (if you want to retrain)
 
 ```bash

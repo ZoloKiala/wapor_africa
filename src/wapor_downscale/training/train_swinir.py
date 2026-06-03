@@ -63,8 +63,10 @@ def parse_args() -> argparse.Namespace:
                     help="Comma-separated channel indices to keep (default: all 9). "
                          "Stack order: 0=B4, 1=B8, 2=B11, 3=ETa300m, 4=NDVI, 5=NDMI, 6=FVC, 7=SIN_DOY, 8=COS_DOY")
     ap.add_argument("--resume", type=Path, default=None,
-                    help="Path to a swinir_best.pt to resume from. Loads model weights, sets start epoch to "
-                         "ckpt['epoch']+1, and fast-forwards the LR scheduler to the matching step.")
+                    help="Resume an interrupted run: load weights + epoch + fast-forward LR schedule.")
+    ap.add_argument("--pretrained", type=Path, default=None,
+                    help="Fine-tune from a checkpoint: load weights only, restart epoch counter and "
+                         "LR schedule. Use with a lower --lr for fine-tuning.")
     return ap.parse_args()
 
 
@@ -132,19 +134,25 @@ def main() -> int:
 
     best_val_rmse = float("inf")
     start_epoch_init = 1
+    if args.resume is not None and args.pretrained is not None:
+        raise SystemExit("Use --resume OR --pretrained, not both.")
     if args.resume is not None:
         ckpt_resume = torch.load(args.resume, map_location=device, weights_only=False)
         model.load_state_dict(ckpt_resume["model_state"])
         prev_epoch = int(ckpt_resume.get("epoch", 0))
         start_epoch_init = prev_epoch + 1
         best_val_rmse = float(ckpt_resume.get("best_val_rmse", float("inf")))
-        # Fast-forward scheduler to align LR with the resumed epoch
         ff_steps = prev_epoch * steps_per_epoch
         for _ in range(ff_steps):
             scheduler.step()
         print(f"[RESUME] loaded {args.resume} (best_val_rmse={best_val_rmse:.4f}) -> "
               f"resuming at epoch {start_epoch_init}; scheduler advanced by {ff_steps} steps; "
               f"current LR={optimizer.param_groups[0]['lr']:.2e}")
+    elif args.pretrained is not None:
+        ckpt_pre = torch.load(args.pretrained, map_location=device, weights_only=False)
+        model.load_state_dict(ckpt_pre["model_state"])
+        print(f"[FINETUNE] loaded weights from {args.pretrained}; "
+              f"fresh epoch counter + LR schedule (use a lower --lr if fine-tuning)")
     history = []
     for epoch in range(start_epoch_init, args.epochs + 1):
         model.train()

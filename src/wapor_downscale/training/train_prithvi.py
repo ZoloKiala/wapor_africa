@@ -61,6 +61,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--huber-delta", type=float, default=5.0)
     ap.add_argument("--min-valid-frac", type=float, default=0.20)
     ap.add_argument("--weight-decay", type=float, default=1e-4)
+    ap.add_argument("--resume", type=Path, default=None,
+                    help="Resume an interrupted run: load weights + epoch + fast-forward LR schedule.")
+    ap.add_argument("--pretrained", type=Path, default=None,
+                    help="Fine-tune from a checkpoint: load weights only, restart epoch counter and "
+                         "LR schedule. Use with lower --lr-head / --lr-backbone for fine-tuning.")
     ap.add_argument("--grad-clip", type=float, default=1.0)
     return ap.parse_args()
 
@@ -135,8 +140,28 @@ def main() -> int:
     scaler = torch.amp.GradScaler("cuda", enabled=(device.type == "cuda"))
 
     best_val_rmse = float("inf")
+    start_epoch = 1
+    if args.resume is not None and args.pretrained is not None:
+        raise SystemExit("Use --resume OR --pretrained, not both.")
+    if args.resume is not None:
+        ck = torch.load(args.resume, map_location=device, weights_only=False)
+        model.load_state_dict(ck["model_state"])
+        prev_epoch = int(ck.get("epoch", 0))
+        start_epoch = prev_epoch + 1
+        best_val_rmse = float(ck.get("best_val_rmse", float("inf")))
+        ff = prev_epoch * steps_per_epoch
+        for _ in range(ff):
+            scheduler.step()
+        print(f"[RESUME] loaded {args.resume} (best_val_rmse={best_val_rmse:.4f}) -> "
+              f"start at epoch {start_epoch}, scheduler advanced by {ff} steps")
+    elif args.pretrained is not None:
+        ck = torch.load(args.pretrained, map_location=device, weights_only=False)
+        model.load_state_dict(ck["model_state"])
+        print(f"[FINETUNE] loaded weights from {args.pretrained}; "
+              f"fresh epoch counter + LR schedule")
+
     history = []
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(start_epoch, args.epochs + 1):
         model.train()
         t0 = time.time()
         running_loss = 0.0
