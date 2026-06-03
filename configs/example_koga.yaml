@@ -1,0 +1,54 @@
+site:
+  name: KOGA
+  description: Koga Irrigation Scheme, Amhara Region, Ethiopia (transferability test)
+  l3_site_code: KOG             # to be confirmed by 00_probe_l3_aoi.py
+  l3_candidates: [KOG, AWS, AWA, AND, DBA, ZWA, KOA, WAD]
+  target_bbox_hint: [37.0, 11.2, 37.4, 11.6]   # rough Koga bbox (lon_min, lat_min, lon_max, lat_max)
+
+time_range:
+  start: "2024-01-01"
+  end:   "2024-12-31"
+  cadence: dekad
+
+wapor:
+  bucket: fao-gismgr-wapor-3-data
+  l3_target_mapset: L3-AETI-D
+  l2_predictor_mapset: L2-AETI-D
+  l3_grid_prefix:   DATA/WAPOR-3/GRID/L3-GRID
+  l3_data_prefix:   DATA/WAPOR-3/MOSAICSET/L3-AETI-D
+  l2_data_prefix:   DATA/WAPOR-3/MAPSET/L2-AETI-D
+  scale_l2: 100
+  scale_l3: 100
+
+sentinel2:
+  collection: COPERNICUS/S2_SR_HARMONIZED
+  bands: [B4, B8, B11]
+  cloud_filter: CLOUDY_PIXEL_PERCENTAGE
+  cloud_max: 60
+  composite_window_days: 10
+  scale_m: 20
+
+static:
+  dem_source: USGS/SRTMGL1_003
+  worldcover_source: ESA/WorldCover/v200
+  exclude_urban: true
+  exclude_water: true
+
+rainfall:
+  source: UCSB-CHG/CHIRPS/DAILY
+  window_days: 10
+  lag_window_days: 10
+
+gee:
+  service_account_json: c:/Users/z.kiala/Documents/wapor_africa/tethys-app-1-087d23478872.json
+  service_account_email: null
+
+paths:
+  data_root: data/koga
+  wapor_l3_dir: data/koga/wapor_l3
+  wapor_l2_dir: data/koga/wapor_l2
+  s2_dir:       data/koga/s2
+  static_dir:   data/koga/static
+  rainfall_dir: data/koga/rainfall
+  stacks_dir:   data/koga/stacks/KOGA_STACK_S2_MATCH_L3_20M_FULL_1
+  repo_dir:     third_party/WaPOR-downscaling

@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.spyderproject
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Large project artefacts (NOT committed) ===
+# Trained model checkpoints (~500 MB-1.2 GB each)
+*.pt
+*.pth
+*.joblib
+*.h5
+*.ckpt
+models/
+
+# Downloaded data (WaPOR L1/L2/L3, Sentinel-2, stacks). Re-fetch with data_prep scripts.
+data/
+
+# Third-party model weights (Prithvi-EO-2.0-300M, ~1.3 GB)
+third_party/
+
+# Raster outputs
+*.tif
+*.tiff
+*.vrt
+*.aux.xml
+*.geojson.aux.xml
+
+# Per-run prediction outputs
+predictions/
+fair_per_dekad_*.csv
+fair_aggregate_*.json
+
+# Logs
+*.log
+logs/
+
+# Secrets (GEE service-account JSON, API keys)
+*service-account*.json
+*.pem
+.env
+.env.local
+secrets/
+
+# OS scratch / IDE caches
+*.bak
+*~
+
+# But DO commit the example configs
+!configs/example_*.yaml

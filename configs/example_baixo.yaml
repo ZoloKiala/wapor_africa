@@ -1,0 +1,54 @@
+site:
+  name: BAIXO
+  description: Baixo Limpopo Irrigation Scheme, Mozambique
+  l3_site_code: MBL             # Baixo Limpopo (EPSG:32736, ~33E, -24.5S)
+  l3_candidates: [LDA, MAG, MAL, MBL, MIT]
+  target_bbox_hint: [32.0, -26.0, 34.0, -24.0]   # rough Baixo Limpopo bbox (lon_min, lat_min, lon_max, lat_max)
+
+time_range:
+  start: 2018-01-01
+  end:   2022-12-31
+  cadence: dekad                # WaPOR D1/D2/D3 per month
+
+wapor:
+  bucket: fao-gismgr-wapor-3-data
+  l3_target_mapset: L3-AETI-D   # target: dekadal Actual ET + Interception at 20 m (the variable being downscaled)
+  l2_predictor_mapset: L2-AETI-D # coarse 'ETa300m' predictor: dekadal AETI at 300 m
+  l3_grid_prefix:   DATA/WAPOR-3/GRID/L3-GRID
+  l3_data_prefix:   DATA/WAPOR-3/MOSAICSET/L3-AETI-D
+  l2_data_prefix:   DATA/WAPOR-3/MAPSET/L2-AETI-D
+  scale_l2: 100                 # WaPOR L2 scale factor (cm/dekad -> mm or to repo's expected units)
+  scale_l3: 100                 # same idea for L3 target
+
+sentinel2:
+  collection: COPERNICUS/S2_SR_HARMONIZED
+  bands: [B4, B8, B11]          # repo predictors
+  cloud_filter: CLOUDY_PIXEL_PERCENTAGE
+  cloud_max: 60
+  composite_window_days: 10     # build a S2 composite per WaPOR dekad
+  scale_m: 20
+
+static:
+  dem_source: USGS/SRTMGL1_003
+  worldcover_source: ESA/WorldCover/v200
+  exclude_urban: true           # WorldCover class 50
+  exclude_water: true           # WorldCover class 80
+
+rainfall:
+  source: UCSB-CHG/CHIRPS/DAILY
+  window_days: 10
+  lag_window_days: 10
+
+gee:
+  service_account_json: c:/Users/z.kiala/Documents/wapor_africa/tethys-app-1-087d23478872.json
+  service_account_email: null   # auto-derived from JSON if null
+
+paths:
+  data_root: data/baixo
+  wapor_l3_dir: data/baixo/wapor_l3
+  wapor_l2_dir: data/baixo/wapor_l2
+  s2_dir:       data/baixo/s2
+  static_dir:   data/baixo/static
+  rainfall_dir: data/baixo/rainfall
+  stacks_dir:   data/baixo/stacks/BAIXO_STACK_S2_MATCH_L3_20M_FULL_1
+  repo_dir:     third_party/WaPOR-downscaling
