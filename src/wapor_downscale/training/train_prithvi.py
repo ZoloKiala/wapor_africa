@@ -230,7 +230,7 @@ def main() -> int:
             }, out_dir / "prithvi_best.pt")
 
     (out_dir / "history.json").write_text(json.dumps(
-        {"history": history, "best_val_rmse": best_val_rmse, "args": vars(args)}, indent=2))
+        {"history": history, "best_val_rmse": best_val_rmse, "args": vars(args)}, indent=2, default=str))
     print(f"[DONE] best val_rmse={best_val_rmse:.4f}  saved to {out_dir / 'prithvi_best.pt'}")
     return 0
 
