@@ -16,8 +16,8 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from band_adapter import S2ToHLSAdapter, select_side, select_spectral
-from prithvi_backbone import PrithviBackbone
+from wapor_downscale.models.band_adapter import S2ToHLSAdapter, select_side, select_spectral
+from wapor_downscale.models.prithvi_backbone import PrithviBackbone
 
 
 class SideEncoder(nn.Module):
