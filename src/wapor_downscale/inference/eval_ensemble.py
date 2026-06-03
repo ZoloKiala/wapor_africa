@@ -25,7 +25,7 @@ import rasterio
 import torch
 from rasterio.windows import Window
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[3]
 from wapor_downscale.models.unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors, _band_index_by_name
 from wapor_downscale.models.swinir_model import SwinIRRegression
 from wapor_downscale.models.prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3
