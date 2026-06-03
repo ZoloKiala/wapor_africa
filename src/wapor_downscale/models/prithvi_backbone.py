@@ -17,6 +17,7 @@ Output shape contract (real and mock):
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -24,8 +25,11 @@ import torch
 import torch.nn as nn
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[3]
 PRITHVI_DIR = REPO_ROOT / "third_party" / "prithvi_eo_v2_300m"
+_OVERRIDE = os.environ.get("WAPOR_PRITHVI_DIR")
+if _OVERRIDE:
+    PRITHVI_DIR = Path(_OVERRIDE)
 
 # Make the official model code importable as a top-level module.
 if PRITHVI_DIR.exists() and str(PRITHVI_DIR) not in sys.path:
