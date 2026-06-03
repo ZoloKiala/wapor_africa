@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Retrain CatBoost on combined Baixo + Lamego training samples.
 
 Reuses the run-3 best feature set + CB params:
@@ -25,8 +21,7 @@ import joblib
 import numpy as np
 from catboost import CatBoostRegressor
 
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors
+from wapor_downscale.models.unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors
 
 
 DEFAULT_BAIXO_STACKS = Path(r"c:\Users\z.kiala\Documents\wapor_africa\data\baixo\stacks\BAIXO_STACK_S2_MATCH_L3_20M_FULL_1")

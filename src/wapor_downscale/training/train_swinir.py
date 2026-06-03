@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Train SwinIR-Lightweight on the same stacks/loss/split as the UNet final run."""
 from __future__ import annotations
 
@@ -16,8 +12,7 @@ import torch
 from torch.utils.data import DataLoader
 
 # reuse the dataset / loss / metrics
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import (
+from wapor_downscale.models.unet_common import (
     N_CHANNELS,
     PatchSamplerConfig,
     StackPatchDataset,
@@ -26,8 +21,7 @@ from unet_common import (
     masked_huber_loss,
     split_files_by_year,
 )
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from swinir_model import SwinIRRegression, count_params
+from wapor_downscale.models.swinir_model import SwinIRRegression, count_params
 
 
 def parse_args() -> argparse.Namespace:

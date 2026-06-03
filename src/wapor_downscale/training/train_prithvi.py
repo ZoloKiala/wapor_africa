@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Train PrithviRegression on the multi-site (Baixo + Lamego) downscaling task.
 
 Mirrors scripts/swinir/swinir_train.py: same dataset, same loss, same
@@ -23,8 +19,7 @@ import torch
 from torch.utils.data import DataLoader
 
 # Re-use the SwinIR/UNet dataset + loss.
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import (
+from wapor_downscale.models.unet_common import (
     N_CHANNELS,
     PatchSamplerConfig,
     StackPatchDataset,
@@ -33,8 +28,7 @@ from unet_common import (
     masked_huber_loss,
     split_files_by_year,
 )
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3, count_params
+from wapor_downscale.models.prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3, count_params
 
 
 def parse_args() -> argparse.Namespace:

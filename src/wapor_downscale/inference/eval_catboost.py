@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Multi-site CatBoost per-dekad eval in the standard fair_per_dekad_<tag>.csv format.
 
 Usage:
@@ -22,8 +18,7 @@ import joblib
 import numpy as np
 import rasterio
 
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors
+from wapor_downscale.models.unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors
 
 # Same feature order as catboost_train_multi.py
 CB_FEATURE_ORDER = [7, 8, 3, 4, 5, 6, 1, 2, 0]

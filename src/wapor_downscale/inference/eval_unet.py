@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Multi-site UNet eval producing fair_per_dekad_<tag>.csv + fair_aggregate_<tag>.json
 in the standard format used by the comparison printer.
 """
@@ -21,8 +17,7 @@ import segmentation_models_pytorch as smp
 import torch
 from rasterio.windows import Window
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from unet_common import (
+from wapor_downscale.models.unet_common import (
     N_CHANNELS, NODATA, _band_index_by_name, list_stack_files, split_files_by_year, stack_to_tensors,
 )
 

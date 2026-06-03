@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Predict one downscaled 20m AETI map for a single L1-stack using SwinIR + Prithvi + Ensemble.
 
 Outputs three GeoTIFFs (single-band float32, mm/dekad, georeferenced to the input stack):
@@ -31,11 +27,11 @@ from rasterio.windows import Window
 
 REPO = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO / "unet"))
-from unet_common import NODATA, _band_index_by_name, stack_to_tensors
+from wapor_downscale.models.unet_common import NODATA, _band_index_by_name, stack_to_tensors
 sys.path.insert(0, str(REPO / "swinir"))
-from swinir_model import SwinIRRegression
+from wapor_downscale.models.swinir_model import SwinIRRegression
 sys.path.insert(0, str(REPO / "prithvi"))
-from prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3
+from wapor_downscale.models.prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3
 
 
 def hann2d(p, device):

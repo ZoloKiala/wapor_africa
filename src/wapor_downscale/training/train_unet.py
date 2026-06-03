@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Train a small UNet to downscale WaPOR L3 AETI from S2 + L2 predictors.
 
 Usage:
@@ -20,8 +16,7 @@ import segmentation_models_pytorch as smp
 import torch
 from torch.utils.data import DataLoader, random_split
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from unet_common import (
+from wapor_downscale.models.unet_common import (
     N_CHANNELS,
     PatchSamplerConfig,
     StackPatchDataset,

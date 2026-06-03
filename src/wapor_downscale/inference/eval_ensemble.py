@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Ensemble evaluator: weighted average of a SwinIR + a Prithvi (V1/V2/V3) checkpoint per pixel.
 
 For each hold-out dekad, runs both models with Hann-blend tiling (optionally TTA),
@@ -30,12 +26,9 @@ import torch
 from rasterio.windows import Window
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors, _band_index_by_name
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from swinir_model import SwinIRRegression
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3
+from wapor_downscale.models.unet_common import NODATA, list_stack_files, split_files_by_year, stack_to_tensors, _band_index_by_name
+from wapor_downscale.models.swinir_model import SwinIRRegression
+from wapor_downscale.models.prithvi_regression import PrithviRegression, PrithviRegressionV2, PrithviRegressionV3
 
 
 SITES = [

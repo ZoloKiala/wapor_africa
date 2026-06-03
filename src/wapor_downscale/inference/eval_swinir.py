@@ -1,7 +1,3 @@
-import sys as _sys
-from pathlib import Path as _Path
-_HERE = _Path(__file__).resolve().parent
-_sys.path.insert(0, str(_HERE.parent / "models"))
 """Per-dekad hold-out evaluation of a single SwinIR checkpoint.
 
 Same CB-fair mask + tiling + Hann blending as fair_compare_multi.py, but only
@@ -27,16 +23,14 @@ import rasterio
 import torch
 from rasterio.windows import Window
 
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from unet_common import (
+from wapor_downscale.models.unet_common import (
     NODATA,
     list_stack_files,
     split_files_by_year,
     stack_to_tensors,
     _band_index_by_name,
 )
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent / "models"))
-from swinir_model import SwinIRRegression  # type: ignore
+from wapor_downscale.models.swinir_model import SwinIRRegression  # type: ignore
 
 
 SITES = [
